@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hangry Joe's — The Morning Cereal That Won't Make You Fat</title>
+<meta name="description" content="Delicious cream of rice with double the volume at half the calories. 170 cals per serving, ready in 90 seconds, zero sugar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!--
+  Hangry Joe's — hot rice cereal landing page (wireframe build)
+  Reference: references/lp-hype-media-co-hangryjoes-lp-1-- (desktop 1920 + mobile 328)
+
+  Problems in the reference that are fixed here:
+   1. Header logo is a broken image ("Company Logo" alt text) on both breakpoints.
+   2. Desktop header "BUY NOW" button is clipped off the right edge of the viewport.
+   3. Buy box: rating icon, 4 feature icons and the shipping icon are all broken images.
+   4. Buy box: "Free shipping" line sits off-centre under the BUY NOW button.
+   5. Buy box: "Every 1 month" dropdown is live even when One-time is selected, and the
+      BUY NOW price never changes with the chosen option.
+   6. Buy box: "Ingredient List" dropdown opens to nothing, followed by a big empty gap.
+   7. Mobile buy box: the buy button, option cards and ingredient box are 3 different widths.
+   8. Headline typo "CONVINIENT" -> "CONVENIENT".
+   9. Testimonial cards: bylines sit at different heights (JUSTIN Y. lower, different font
+      and case); mobile quote opens with a doubled quote mark ""Hangry.
+  10. Video captions sit at uneven heights on desktop; the videos themselves are
+      "Video unavailable / This video is private" embeds.
+  11. Mobile comparison: product photos hang out below the card edge.
+  12. Mobile video carousel leaves a large dead area below it.
+  13. Mobile final CTA: the bowl illustration overlaps the photo and bleeds into the footer.
+  14. Mobile review byline loses its hyphen ("Jamie R.   Verified Buyer"); footer copy is
+      missing a space ("Copyright.All").
+  15. Hero checklist on mobile has a large stray indent between tick and text.
+-->
+<style>
+:root{
+  --yellow:#FFFF00;
+  --sky:#C9EBF7;
+  --grey:#EEEEEE;
+  --ink:#0A0A0A;
+  --muted:#525252;
+  --star:#FEC361;
+  --star-card:#FFB400;
+  --green:#4CB84F;
+  --line:#0A0A0A;
+  --gutter:20px;
+  --wrap:1240px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;background:#fff;color:var(--ink);
+  font-family:"Montserrat",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:16px;line-height:1.55;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+h1,h2,h3{margin:0;font-weight:800;line-height:1.18;text-transform:uppercase;letter-spacing:.005em}
+h1{font-size:clamp(1.65rem,1.1rem + 2.4vw,3rem);line-height:1.32}
+h2{font-size:clamp(1.45rem,1rem + 2vw,2.9rem)}
+h3{font-size:1.1rem}
+p{margin:0}
+p,li,h1,h2,h3,dt,dd,summary,span,label{overflow-wrap:break-word}
+
+.wrap{width:100%;max-width:calc(var(--wrap) + var(--gutter)*2);margin-inline:auto;padding-inline:var(--gutter)}
+.sec{padding-block:48px}
+.sec--sky{background:var(--sky)}
+.sec--grey{background:var(--grey)}
+.center{text-align:center}
+.d-only{display:none}
+
+.ic{width:22px;height:22px;flex:none}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+
+/* ---------------- buttons ---------------- */
+.btn{
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  width:100%;min-height:50px;padding:10px 24px;
+  background:var(--yellow);color:var(--ink);
+  border:2px solid var(--line);border-radius:6px;
+  font-weight:700;font-size:1.05rem;letter-spacing:.01em;text-transform:uppercase;text-decoration:none;
+  cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;
+}
+.btn:hover{box-shadow:0 4px 0 var(--line);transform:translateY(-2px)}
+.btn:active{box-shadow:none;transform:none}
+.btn--dark{background:var(--ink);color:#fff;border-color:var(--ink);width:auto;min-height:44px;padding:8px 26px}
+.btn--dark:hover{box-shadow:0 4px 0 rgba(0,0,0,.25)}
+/* CTA block — every child is exactly the button's width, so the
+   rating and shipping lines centre under the button itself */
+.cta{display:flex;flex-direction:column;align-items:stretch;gap:10px;width:100%;max-width:500px}
+.cta--center{margin-inline:auto}
+
+.stars{display:inline-flex;gap:3px;color:var(--star)}
+.stars .ic{width:18px;height:18px}
+.stars--lg .ic{width:36px;height:36px}
+.stars--card{color:var(--star-card)}
+.stars--card .ic{width:16px;height:16px}
+
+.rating{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-size:.92rem}
+.ship{display:flex;align-items:center;justify-content:center;gap:10px;font-size:.8rem}
+.ship .ic{width:30px;height:22px}
+
+/* ==========================================================================
+   WIREFRAME PLACEHOLDERS (shared pattern across the portfolio)
+   ========================================================================== */
+.ph{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  background:#E6E4E0;border:2px solid #C3BFB8;border-radius:8px;
+  color:#7E776D;overflow:hidden;width:100%;
+}
+.ph::before,.ph::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(to top right,transparent calc(50% - 1px),#C3BFB8 calc(50% - 1px),#C3BFB8 calc(50% + 1px),transparent calc(50% + 1px));
+}
+.ph::after{
+  background-image:linear-gradient(to bottom right,transparent calc(50% - 1px),#C3BFB8 calc(50% - 1px),#C3BFB8 calc(50% + 1px),transparent calc(50% + 1px));
+}
+.ph__in{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:#E6E4E0;padding:11px 15px;border-radius:5px;
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  text-align:center;line-height:1.4;
+}
+.ph__in .ic{width:30px;height:30px}
+.ph--tight .ph__in{padding:3px 5px;font-size:8px;letter-spacing:.04em;gap:2px}
+.ph--tight .ph__in .ic{width:16px;height:16px}
+.ph--dark{background:#1C1C1F;border-color:#3A3A40;color:#9A9AA3}
+.ph--dark::before,.ph--dark::after{filter:brightness(.4)}
+.ph--dark .ph__in{background:#1C1C1F}
+.ph-logo{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:6px 18px;border:2px dashed rgba(10,10,10,.45);border-radius:6px;
+  font-weight:800;font-size:1.05rem;letter-spacing:.3em;color:var(--ink);
+  text-transform:uppercase;white-space:nowrap;text-decoration:none;
+}
+.ph-logo--lg{font-size:1.35rem;padding:10px 26px}
+
+/* badge used over product imagery */
+.badge{
+  position:absolute;z-index:2;top:-6px;left:-4px;
+  width:92px;height:92px;border-radius:50%;background:var(--yellow);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:600;line-height:1.15;text-align:center;
+}
+.badge b{font-size:1.45rem;font-weight:800;line-height:1.1}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+.hdr{background:var(--yellow)}
+.hdr .wrap{display:flex;align-items:center;justify-content:center;min-height:64px}
+.hdr .btn--dark{display:none}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.hero{background:var(--sky);padding-block:32px 36px;overflow:hidden}
+.hero__grid{display:grid;gap:28px}
+.hero__sub{font-size:1.08rem;line-height:1.7;margin-top:10px;max-width:520px}
+.checks{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}
+.checks li{display:flex;align-items:center;gap:12px;font-size:1rem}
+.tick{
+  flex:none;width:20px;height:20px;border-radius:50%;background:var(--yellow);
+  display:flex;align-items:center;justify-content:center;
+}
+.tick .ic{width:15px;height:15px}
+.hero .cta{margin-top:26px}
+.hero__media{position:relative;width:100%;max-width:440px;margin-inline:auto}
+.hero__media .ph{aspect-ratio:1/1.02}
+
+/* ==========================================================================
+   REVIEW BAND
+   ========================================================================== */
+.band{text-align:center;padding-block:40px}
+.band .stars{margin-bottom:10px}
+.band h2{max-width:820px;margin-inline:auto}
+.band__quote{max-width:720px;margin:18px auto 0;color:var(--muted);font-size:.95rem;line-height:1.75}
+.band__by{margin-top:22px;font-weight:700;font-size:.9rem}
+
+/* ==========================================================================
+   WHY
+   ========================================================================== */
+.why__sub{margin:14px auto 0;max-width:520px;font-size:1.02rem;line-height:1.7}
+.feats{
+  list-style:none;margin:30px 0 0;padding:0;
+  display:grid;grid-template-columns:repeat(6,1fr);row-gap:26px;
+}
+.feats li{grid-column:span 2;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.feats li:nth-child(4){grid-column:2 / span 2}
+.feats .ic{width:62px;height:62px}
+.feats span{font-weight:800;font-size:.72rem;line-height:1.3;text-transform:uppercase}
+
+.cmp{display:grid;grid-template-columns:1fr 1fr;margin-top:36px;background:#fff}
+.cmp__card{display:grid;grid-template-areas:"body" "media";align-content:start;gap:14px;padding:18px 10px 16px}
+.cmp__card--us{background:var(--yellow)}
+.cmp__body{grid-area:body}
+.cmp__media{grid-area:media;align-self:end}
+.cmp__media .ph{aspect-ratio:1;max-width:130px;margin-inline:auto}
+.cmp h3{font-size:.8rem;text-align:center;line-height:1.35;margin-bottom:14px}
+.cmp ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.cmp li{display:flex;align-items:flex-start;gap:7px;font-size:.72rem;line-height:1.45}
+.cmp li .ic{width:15px;height:15px;margin-top:1px}
+.cmp li .ic-yes{color:var(--ink)}
+.cmp li .ic-no{color:var(--ink)}
+.cmp__card--us .ph{background:#EDEB9E;border-color:#B9B64E;color:#6F6C1F}
+.cmp__card--us .ph__in{background:#EDEB9E}
+.cmp__card--us .ph::before,.cmp__card--us .ph::after{filter:hue-rotate(10deg)}
+.why .cta{margin-top:36px}
+
+/* ==========================================================================
+   BUY BOX
+   ========================================================================== */
+.buy{display:grid;gap:26px}
+.gal__main{position:relative}
+.gal__main .ph{aspect-ratio:6/5;background:#F2E7B8;border-color:#CDBB6E;color:#7B6A2A}
+.gal__main .ph__in{background:#F2E7B8}
+.gal__main .badge{top:14px;left:14px;width:84px;height:84px}
+.gal__rail{display:flex;justify-content:center;gap:8px;margin-top:10px}
+.gal__rail button{
+  padding:0;border:0;background:none;cursor:pointer;
+  flex:0 1 64px;
+}
+.gal__rail .ph{aspect-ratio:1;border-radius:4px}
+.gal__rail button.is-on .ph{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+
+.info{width:100%;max-width:560px}
+.info .rating{justify-content:flex-start;font-size:.8rem;color:var(--muted)}
+.info .stars .ic{width:14px;height:14px}
+.info h2{margin-top:4px;font-size:clamp(1.9rem,1.4rem + 2vw,2.6rem);line-height:1.1}
+.info__sub{margin-top:8px;font-size:1.1rem;line-height:1.35;max-width:420px}
+.pfeats{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.pfeats li{display:flex;align-items:center;gap:7px;font-size:.85rem;line-height:1.3}
+.pfeats .tick{width:17px;height:17px}
+.pfeats .tick .ic{width:12px;height:12px}
+.info__serv{margin-top:18px;font-size:.92rem}
+
+.field{margin-top:18px}
+.field__label{font-size:.95rem;margin-bottom:8px;display:block}
+.flav{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.flav .field__label{margin:0}
+.opt{
+  padding:8px 14px;background:#fff;border:1.5px solid var(--ink);border-radius:2px;
+  font-size:.85rem;cursor:pointer;min-height:40px;
+}
+.opt.is-on{border:3px solid var(--yellow);font-weight:700;padding:6px 12px;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+
+.plans{display:grid;gap:12px}
+.plan{
+  display:block;background:#fff;border:2px solid transparent;padding:14px 16px;cursor:pointer;
+}
+.plan.is-on{border-color:var(--ink)}
+.plan__row{display:flex;align-items:center;gap:10px;font-size:.92rem}
+.plan__row input{margin:0;width:16px;height:16px;accent-color:#1A73E8;flex:none}
+.plan__row b{margin-left:auto;white-space:nowrap}
+.plan select{
+  margin-top:12px;width:100%;min-height:42px;padding:8px 12px;
+  border:1px solid #767676;border-radius:0;background:#fff;font-size:.92rem;
+}
+.plan select:disabled{color:#9A9A9A;border-color:#C9C9C9;background:#FAFAFA}
+
+.buy__cta{margin-top:22px;max-width:none}
+.buy__cta .btn{min-height:50px}
+
+.ingr{margin-top:22px;background:#fff;border:2px solid #767676}
+.ingr summary{
+  list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 12px;font-weight:700;cursor:pointer;
+}
+.ingr summary::-webkit-details-marker{display:none}
+.ingr summary .ic{width:18px;height:18px;transition:transform .2s ease}
+.ingr[open] summary .ic{transform:rotate(180deg)}
+.ingr__body{padding:0 12px 14px;font-size:.88rem;line-height:1.6;color:var(--muted)}
+.ingr__body p + p{margin-top:8px}
+
+/* ==========================================================================
+   STEPS
+   ========================================================================== */
+.eyebrow{font-size:.62rem;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
+.steps__title{margin-top:12px;font-weight:600;text-transform:none;font-size:clamp(1.8rem,1.3rem + 2vw,2.9rem)}
+.steps{list-style:none;margin:30px auto 0;padding:0;display:grid;gap:26px;max-width:360px}
+.steps li{display:grid;grid-template-columns:78px 1fr;align-items:center;gap:18px;font-size:1.05rem;line-height:1.6;text-align:left}
+.steps .ic{width:78px;height:64px}
+
+/* ==========================================================================
+   RAIL — grid on desktop, 1-up swipe carousel on mobile
+   ========================================================================== */
+.rail{margin-top:30px}
+.rail__track{
+  display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.rail__track::-webkit-scrollbar{display:none}
+.rail__slide{flex:0 0 100%;scroll-snap-align:start;padding-inline:14px;display:flex;flex-direction:column}
+.rail__nav{display:flex;align-items:center;justify-content:center;gap:26px;margin-top:16px}
+.rail__arrow{
+  width:40px;height:40px;border:0;background:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.rail__arrow .ic{width:26px;height:26px}
+.rail__arrow:disabled{opacity:.25;cursor:default}
+.rail__dots{display:flex;gap:8px}
+.rail__dot{width:9px;height:9px;border-radius:50%;border:0;padding:0;background:#BDBDBD;cursor:pointer}
+.rail__dot.is-on{background:var(--ink)}
+
+/* testimonials */
+.tcard{
+  flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;
+  background:#fff;border:2px solid var(--ink);border-radius:12px;padding:24px 20px 22px;
+}
+.tcard h3{font-weight:600;font-size:1.12rem;line-height:1.25;margin-top:10px}
+.tcard__q{margin-top:12px;color:var(--muted);font-size:.9rem;line-height:1.6}
+.tcard__by{margin-top:auto;padding-top:22px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tcard__by b{font-weight:800;font-size:.95rem}
+.tcard__by span{display:flex;align-items:center;gap:7px;color:#8A8A8A;font-size:.85rem}
+.tcard__by .ic{width:17px;height:17px;color:var(--green)}
+.says .cta{margin-top:34px}
+
+/* videos */
+.vid__cap{font-weight:700;font-size:.95rem;text-align:center;margin-bottom:14px;line-height:1.35}
+.vid .ph{aspect-ratio:9/16;max-width:260px;margin-inline:auto;border-radius:4px}
+.vid .ph__in .ic{width:44px;height:44px}
+
+/* ==========================================================================
+   FINAL CTA + FOOTER
+   ========================================================================== */
+.final{background:var(--sky);padding-block:40px 36px}
+.final__grid{display:grid;gap:26px}
+.final__copy{text-align:center}
+.final__copy h2{font-size:clamp(1.8rem,1.2rem + 2.6vw,3.6rem);line-height:1.12}
+.final__sub{margin:12px auto 0;font-weight:600;font-size:.9rem;max-width:360px;line-height:1.5}
+.final .cta{margin-top:22px}
+.final__media .ph{aspect-ratio:1/.95;border:3px solid var(--ink);border-radius:12px}
+.final__bowl{width:150px;height:auto;margin-inline:auto;color:var(--ink)}
+.final__bowl--desk{display:none}
+
+.ftr{background:var(--yellow);text-align:center;padding-block:30px 28px}
+.ftr p{margin-top:14px;font-size:.88rem;line-height:1.6}
+
+/* ==========================================================================
+   DESKTOP
+   ========================================================================== */
+@media (min-width:880px){
+  :root{--gutter:40px}
+  .sec{padding-block:72px}
+  .d-only{display:inline}
+  .why__sub{max-width:none}
+
+  .hdr .wrap{justify-content:space-between;min-height:80px}
+  .hdr .btn--dark{display:inline-flex}
+
+  .hero{padding-block:34px 30px}
+  .hero__grid{grid-template-columns:1.05fr 1fr;align-items:center;gap:48px}
+  .hero__sub{font-size:1.2rem}
+  .checks{display:flex;flex-wrap:wrap;gap:10px 26px}
+  .checks li{font-size:.92rem;gap:9px}
+  .hero__media{max-width:520px;margin-inline:auto 0}
+
+  .band{padding-block:56px}
+  .band__quote{font-size:.95rem}
+
+  .feats{grid-template-columns:repeat(5,1fr);margin-top:44px}
+  .feats li,.feats li:nth-child(4){grid-column:auto}
+  .feats .ic{width:96px;height:96px}
+  .feats span{font-size:1.02rem}
+
+  .cmp{gap:60px;background:none;margin-top:70px}
+  .cmp__card,.cmp__card--us{
+    background:#fff;border-radius:8px;overflow:hidden;
+    grid-template-areas:"media body";grid-template-columns:1fr 1.15fr;
+    gap:22px;padding:0 24px 0 0;min-height:300px;align-content:stretch;
+  }
+  .cmp__media{align-self:stretch;display:flex}
+  .cmp__media .ph{max-width:none;aspect-ratio:auto;height:100%;border-radius:0;border-width:0 2px 0 0}
+  .cmp__body{align-self:center;padding-block:28px}
+  .cmp h3{font-size:1.4rem;text-align:left;margin-bottom:22px}
+  .cmp li{font-size:.92rem;gap:12px}
+  .cmp li .ic{width:20px;height:20px}
+  .cmp__card--us .ph,.cmp__card--us .ph__in{background:#E6E4E0}
+  .cmp__card--us .ph{border-color:#C3BFB8;color:#7E776D}
+  .cmp__card--us .ph::before,.cmp__card--us .ph::after{filter:none}
+  .why .cta{margin-top:74px}
+
+  .buy{grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+  .gal{max-width:500px;width:100%;justify-self:end}
+  .info{justify-self:start}
+  .info__sub{font-size:1.15rem}
+  .pfeats{display:flex;flex-wrap:wrap;gap:8px 18px}
+  .buy__cta{max-width:460px}
+  .ingr{max-width:460px}
+  .plans{max-width:466px}
+
+  .steps{grid-template-columns:repeat(3,1fr);max-width:none;gap:40px;margin-top:60px}
+  .steps li{grid-template-columns:110px 1fr;font-size:1.25rem;line-height:1.75}
+  .steps .ic{width:110px;height:84px}
+
+  .rail{margin-top:56px}
+  .rail__track{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;overflow:visible}
+  .rail__slide{padding-inline:0}
+  .rail__nav{display:none}
+  .tcard{border:0;border-radius:6px;padding:26px 18px 36px}
+  .tcard h3{font-size:1.35rem}
+  .tcard__q{font-size:.9rem}
+  .says .cta{margin-top:46px}
+  .vid__cap{font-size:1.05rem}
+  .vid .ph{max-width:322px}
+
+  .final{padding-block:64px 56px}
+  .final__grid{grid-template-columns:1fr 1fr;align-items:center;gap:60px}
+  .final__sub{max-width:none}
+  .final__bowl--desk{display:block;margin-top:34px}
+  .final__bowl--mob{display:none}
+  .final__media{max-width:500px;justify-self:end;width:100%}
+  .final__media .ph{aspect-ratio:1/.83}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .btn,.ingr summary .ic{transition:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ======================= ICON SPRITE ======================= -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.2l2.9 6.2 6.8.8-5 4.7 1.3 6.7L12 17.3l-6 3.3 1.3-6.7-5-4.7 6.8-.8z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-verified" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M7.5 12.3l3 3 6-6"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 34 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="1.5" y="3" width="19" height="14"/><path d="M20.5 8h6l4.5 5v4h-10.5z"/><circle cx="7" cy="19" r="2.6" fill="#fff"/><circle cx="26" cy="19" r="2.6" fill="#fff"/></g></symbol>
+  <symbol id="i-img" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 17l5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.6"/></g></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="currentColor" d="M10 8l6 4-6 4z"/></symbol>
+  <symbol id="i-chev-l" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M15 4l-8 8 8 8"/></symbol>
+  <symbol id="i-chev-r" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M9 4l8 8-8 8"/></symbol>
+  <symbol id="i-chev-d" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M5 9l7 7 7-7"/></symbol>
+
+  <!-- feature icons: simple primitives only -->
+  <symbol id="f-clock" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="38" cy="32" r="20"/><path d="M38 20v12l-6 7"/><path d="M4 24h12M8 32h8M4 40h12"/></g></symbol>
+  <symbol id="f-protein" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M20 32h24"/><path d="M14 20v24M20 16v32M44 16v32M50 20v24"/><path d="M6 32h8M50 32h8"/></g></symbol>
+  <symbol id="f-sugar" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"><circle cx="32" cy="32" r="27"/><path d="M22 25l10-5 10 5v13l-10 5-10-5z"/><path d="M22 25l10 5 10-5M32 30v13"/><path d="M13 13l38 38" stroke-linecap="round"/></g></symbol>
+  <symbol id="f-tube" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 5h20"/><path d="M26 5v46a6 6 0 0 0 12 0V5"/></g><path fill="currentColor" d="M26 36h12v15a6 6 0 0 1-12 0z"/><circle cx="32" cy="26" r="2" fill="currentColor"/></symbol>
+  <symbol id="f-flame" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 4c2 10 20 18 20 36a20 20 0 0 1-40 0c0-9 5-15 9-19 1 6 3 9 7 11 0-12 0-20 4-28z"/><path d="M32 34v16M25 43l7 7 7-7"/></g></symbol>
+
+  <!-- step icons -->
+  <symbol id="s-scoop" viewBox="0 0 80 64"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><path d="M4 30h38l-4 22H10z"/><path d="M12 30a11 9 0 0 1 22 0"/><path d="M42 34h32a3 3 0 0 1 0 6H41"/></g></symbol>
+  <symbol id="s-pour" viewBox="0 0 80 64"><path fill="currentColor" d="M6 38h52a26 22 0 0 1-52 0z"/><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><g transform="rotate(-50 60 20)"><path d="M50 8h20l-3 24H53z"/><path d="M70 13h5v12h-7"/></g><path d="M42 16c-4 6-6 12-6 19" stroke-width="3"/></g></symbol>
+  <symbol id="s-micro" viewBox="0 0 80 64"><rect x="4" y="8" width="72" height="50" rx="3" fill="currentColor"/><rect x="11" y="15" width="44" height="36" rx="2" fill="#EEEEEE"/><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 40h26"/><path d="M24 34c-3-4 3-6 0-10M33 34c-3-4 3-6 0-10M42 34c-3-4 3-6 0-10"/></g><circle cx="66" cy="46" r="3" fill="#EEEEEE"/><g fill="#EEEEEE"><rect x="61" y="16" width="4" height="4"/><rect x="67" y="16" width="4" height="4"/><rect x="61" y="23" width="4" height="4"/><rect x="67" y="23" width="4" height="4"/><rect x="61" y="30" width="4" height="4"/><rect x="67" y="30" width="4" height="4"/></g></symbol>
+
+  <symbol id="bowl" viewBox="0 0 160 130"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 62h136a68 58 0 0 1-136 0z"/><path d="M28 62c-4-10 8-18 16-14 2-10 18-12 22-4 6-8 22-6 24 4 8-6 22-2 20 8 10-2 16 4 14 6"/><path d="M84 52L42 8a7 7 0 0 0-10 10l44 38"/><path d="M34 84c4 14 14 24 26 28"/></g><g stroke="#E3B81C" stroke-width="2.5" stroke-linecap="round"><path d="M58 56l4-4M98 54l3 4M118 58l-3-4"/></g></symbol>
+</svg>
+
+<!-- ======================= HEADER ======================= -->
+<header class="hdr">
+  <div class="wrap">
+    <a class="ph-logo" href="#top" aria-label="Hangry Joe's home">LOGO</a>
+    <a class="btn btn--dark" href="#buy">Buy now</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ======================= HERO ======================= -->
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div class="hero__copy">
+      <h1>The only morning cereal that will not make you fat</h1>
+      <p class="hero__sub">Delicious cream of rice with double the volume at half the calories</p>
+      <ul class="checks">
+        <li><span class="tick"><svg class="ic"><use href="#i-check"/></svg></span>170 Cals / serving</li>
+        <li><span class="tick"><svg class="ic"><use href="#i-check"/></svg></span>Ready in 90 secs</li>
+        <li><span class="tick"><svg class="ic"><use href="#i-check"/></svg></span>Zero sugar &amp; preservatives</li>
+      </ul>
+      <div class="cta">
+        <div class="rating">
+          <span class="stars" aria-hidden="true"><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg></span>
+          <span>4.9/5.0 | 1,500+ Reviews</span>
+        </div>
+        <a class="btn" href="#buy">Order today</a>
+        <div class="ship"><svg class="ic"><use href="#i-truck"/></svg>Free shipping on every order</div>
+      </div>
+    </div>
+    <div class="hero__media">
+      <div class="badge">Subscribe<br>&amp; Save<b>$2</b></div>
+      <div class="ph"><div class="ph__in"><svg class="ic"><use href="#i-img"/></svg>Image 1:1<br>Product jar + fruit</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= REVIEW BAND 1 ======================= -->
+<section class="band">
+  <div class="wrap">
+    <div class="stars stars--lg" role="img" aria-label="5 out of 5 stars"><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg></div>
+    <h2>Unbeatable volume, unmatched flavour!</h2>
+    <p class="band__quote">"I tried them all, but Hangry Joe's tops! Unrivaled volume, silky texture, and divine maple - it's a treat in a calorie deficit phase. A must for cream of rice lovers!"</p>
+    <p class="band__by">Jamie R. - Verified Buyer</p>
+  </div>
+</section>
+
+<!-- ======================= WHY ======================= -->
+<section class="sec sec--sky why">
+  <div class="wrap">
+    <h2 class="center">Why Hangry Joe's?</h2>
+    <p class="why__sub center">Hot rice cereal that tastes good and you can even feel better about.</p>
+
+    <ul class="feats">
+      <li><svg class="ic"><use href="#f-clock"/></svg><span>Ready in<br>90 secs</span></li>
+      <li><svg class="ic"><use href="#f-protein"/></svg><span>5g of<br>protein</span></li>
+      <li><svg class="ic"><use href="#f-sugar"/></svg><span>Zero added<br>sugar</span></li>
+      <li><svg class="ic"><use href="#f-tube"/></svg><span>No artificial<br>flavours</span></li>
+      <li><svg class="ic"><use href="#f-flame"/></svg><span>Only 170 cals<br>/serving</span></li>
+    </ul>
+
+    <div class="cmp">
+      <div class="cmp__card cmp__card--us">
+        <div class="cmp__media"><div class="ph"><div class="ph__in"><svg class="ic"><use href="#i-img"/></svg>Image<br>Jar in hand</div></div></div>
+        <div class="cmp__body">
+          <h3>Hangry Joes</h3>
+          <ul>
+            <li><svg class="ic ic-yes"><use href="#i-check"/></svg>2X volume keeps you full</li>
+            <li><svg class="ic ic-yes"><use href="#i-check"/></svg>170 Cals/ serving</li>
+            <li><svg class="ic ic-yes"><use href="#i-check"/></svg>No artificial flavours, colours &amp; preservatives</li>
+            <li><svg class="ic ic-yes"><use href="#i-check"/></svg>0g Sugar</li>
+          </ul>
+        </div>
+      </div>
+      <div class="cmp__card cmp__card--avg">
+        <div class="cmp__media"><div class="ph"><div class="ph__in"><svg class="ic"><use href="#i-img"/></svg>Image<br>Cereal bowl</div></div></div>
+        <div class="cmp__body">
+          <h3>Your average<br>cereal bowl</h3>
+          <ul>
+            <li><svg class="ic ic-no"><use href="#i-x"/></svg>Less volume makes you crave more</li>
+            <li><svg class="ic ic-no"><use href="#i-x"/></svg>High in Calories</li>
+            <li><svg class="ic ic-no"><use href="#i-x"/></svg>Loaded with artificial ingredients &amp; additives</li>
+            <li><svg class="ic ic-no"><use href="#i-x"/></svg>High in Sugar</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta cta--center"><a class="btn" href="#buy">Feel better today</a></div>
+  </div>
+</section>
+
+<!-- ======================= BUY BOX ======================= -->
+<section class="sec sec--grey" id="buy">
+  <div class="wrap buy">
+    <div class="gal">
+      <div class="gal__main">
+        <div class="badge">Subscribe<br>&amp; Save<b>$2</b></div>
+        <div class="ph"><div class="ph__in"><svg class="ic"><use href="#i-img"/></svg><span data-gal-label>Image 6:5<br>Maple Drizzle jar</span></div></div>
+      </div>
+      <div class="gal__rail" role="group" aria-label="Product images">
+        <button type="button" class="is-on" data-label="Image 6:5<br>Maple Drizzle jar" aria-label="Image 1"><span class="ph ph--tight"><span class="ph__in"><svg class="ic"><use href="#i-img"/></svg></span></span></button>
+        <button type="button" data-label="Image 6:5<br>Lemon Berry bowl" aria-label="Image 2"><span class="ph ph--tight"><span class="ph__in"><svg class="ic"><use href="#i-img"/></svg></span></span></button>
+        <button type="button" data-label="Image 6:5<br>Serving suggestion" aria-label="Image 3"><span class="ph ph--tight"><span class="ph__in"><svg class="ic"><use href="#i-img"/></svg></span></span></button>
+        <button type="button" data-label="Image 6:5<br>Lemon Berry nutrition facts" aria-label="Image 4"><span class="ph ph--tight"><span class="ph__in"><svg class="ic"><use href="#i-img"/></svg></span></span></button>
+        <button type="button" data-label="Image 6:5<br>Maple Drizzle nutrition facts" aria-label="Image 5"><span class="ph ph--tight"><span class="ph__in"><svg class="ic"><use href="#i-img"/></svg></span></span></button>
+      </div>
+    </div>
+
+    <div class="info">
+      <div class="rating">
+        <span class="stars" aria-hidden="true"><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg></span>
+        <span>4.9/5.0 | 1,500+ Reviews</span>
+      </div>
+      <h2>Hangry Joe's</h2>
+      <p class="info__sub">Delicious cream of rice with double the volume at half the calories.</p>
+      <ul class="pfeats">
+        <li><span class="tick"><svg class="ic"><use href="#i-check"/></svg></span>0g Sugar</li>
+        <li><span class="tick"><svg class="ic"><use href="#i-check"/></svg></span>No artificial flavours</li>
+        <li><span class="tick"><svg class="ic"><use href="#i-check"/></svg></span>No preservatives</li>
+        <li><span class="tick"><svg class="ic"><use href="#i-check"/></svg></span>Only 170 calories /serving</li>
+      </ul>
+      <p class="info__serv">12 Servings per container | $2 per serving</p>
+
+      <div class="field flav" data-flavours>
+        <span class="field__label">Flavour :</span>
+        <button type="button" class="opt is-on" aria-pressed="true" data-flavour="Maple Drizzle">Maple Drizzle</button>
+        <button type="button" class="opt" aria-pressed="false" data-flavour="Lemon Berry">Lemon Berry</button>
+      </div>
+
+      <div class="field">
+        <span class="field__label">Purchase Option :</span>
+        <div class="plans">
+          <label class="plan is-on">
+            <span class="plan__row"><input type="radio" name="plan" value="24.95" checked>One time Purchase<b>$24.95</b></span>
+          </label>
+          <label class="plan">
+            <span class="plan__row"><input type="radio" name="plan" value="22.95">Subscribe &amp; SAVE $2 on every order!<b>$22.95</b></span>
+            <select aria-label="Delivery frequency" disabled>
+              <option>Every 1 month</option>
+              <option>Every 2 months</option>
+              <option>Every 3 months</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="cta buy__cta">
+        <a class="btn" href="#buy" data-buy>Buy now | $24.95</a>
+        <div class="ship"><svg class="ic"><use href="#i-truck"/></svg>Free shipping on every order</div>
+      </div>
+
+      <details class="ingr">
+        <summary>Ingredient List<svg class="ic"><use href="#i-chev-d"/></svg></summary>
+        <div class="ingr__body">
+          <p><b>Maple Drizzle:</b> Cream of rice (ground white rice), natural maple flavour, sea salt, stevia leaf extract.</p>
+          <p><b>Lemon Berry:</b> Cream of rice (ground white rice), natural lemon &amp; berry flavours, sea salt, stevia leaf extract.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= REVIEW BAND 2 ======================= -->
+<section class="band">
+  <div class="wrap">
+    <div class="stars stars--lg" role="img" aria-label="5 out of 5 stars"><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg></div>
+    <h2>Convenient, high&#8209;quality,<br class="d-only"> delicious snack</h2>
+    <p class="band__quote">"Hangry Joes is one of my favorite products to incorporate into my routine especially when calories start to get low. The volume it creates is super filling and the fact it comes pre flavored is an added bonus. Maple drizzle is my go to and I look forward to making even more creative recipes when I'm bulking."</p>
+    <p class="band__by">Ian B. - Verified Buyer</p>
+  </div>
+</section>
+
+<!-- ======================= STEPS ======================= -->
+<section class="sec sec--grey">
+  <div class="wrap center">
+    <p class="eyebrow">How to make your bowl?</p>
+    <h2 class="steps__title">As simple as 1, 2, 3</h2>
+    <ol class="steps">
+      <li><svg class="ic" aria-hidden="true"><use href="#s-scoop"/></svg><p><b>1.</b> Add 2 scoops of Hangry Joe's rice cereal in a bowl.</p></li>
+      <li><svg class="ic" aria-hidden="true"><use href="#s-pour"/></svg><p><b>2.</b> Add 11oz of water in the bowl.</p></li>
+      <li><svg class="ic" aria-hidden="true"><use href="#s-micro"/></svg><p><b>3.</b> Microwave for 90 seconds.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ======================= TESTIMONIALS ======================= -->
+<section class="sec sec--sky says">
+  <div class="wrap">
+    <h2 class="center">See what our Hangry Joe's are saying</h2>
+
+    <div class="rail" data-rail>
+      <div class="rail__track">
+        <div class="rail__slide">
+          <article class="tcard">
+            <div class="stars stars--card" role="img" aria-label="5 out of 5 stars"><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg></div>
+            <h3>Changed the breakfast game!!</h3>
+            <p class="tcard__q">"Hangry Joe's has changed the breakfast game forever! It helps me get my carbs in whether i am bulking or cutting without feeling like i am missing out on food. As an athlete and a former coach I always recommend Hangry Joe's to anyone who is having a hard time with cutting calories because of the volume a single serving has. You need to give it a try!"</p>
+            <div class="tcard__by"><b>Carolina A.</b><span><svg class="ic"><use href="#i-verified"/></svg>Verified Customer</span></div>
+          </article>
+        </div>
+        <div class="rail__slide">
+          <article class="tcard">
+            <div class="stars stars--card" role="img" aria-label="5 out of 5 stars"><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg></div>
+            <h3>Hands down the best cream of rice</h3>
+            <p class="tcard__q">"Hangry Joes' hot rice cereal is a game changer! This hot rice cereal has so much volume, compared to a traditional cream of rice and oatmeal. During my recent prep, I swapped out oats for Hangry Joes, and for the same amount of carbs, I had more volume with Hangry Joes! I love the maple drizzle. It's a great addition to any breakfast routine or meal plan"</p>
+            <div class="tcard__by"><b>Carlos Jr.</b><span><svg class="ic"><use href="#i-verified"/></svg>Verified Customer</span></div>
+          </article>
+        </div>
+        <div class="rail__slide">
+          <article class="tcard">
+            <div class="stars stars--card" role="img" aria-label="5 out of 5 stars"><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg></div>
+            <h3>New favourite diet hack!!</h3>
+            <p class="tcard__q">"New favourite diet hack! Great tasting cream of rice flavours with a smooth and fluffy consistency. Now I can enjoy what appears to be a larger portion after it cooks without increasing calories or carb intake"</p>
+            <div class="tcard__by"><b>Justin Y.</b><span><svg class="ic"><use href="#i-verified"/></svg>Verified Customer</span></div>
+          </article>
+        </div>
+      </div>
+      <div class="rail__nav">
+        <button type="button" class="rail__arrow" data-prev aria-label="Previous review"><svg class="ic"><use href="#i-chev-l"/></svg></button>
+        <div class="rail__dots"></div>
+        <button type="button" class="rail__arrow" data-next aria-label="Next review"><svg class="ic"><use href="#i-chev-r"/></svg></button>
+      </div>
+    </div>
+
+    <div class="cta cta--center"><a class="btn" href="#buy">Shop the good stuff</a></div>
+  </div>
+</section>
+
+<!-- ======================= VIDEOS ======================= -->
+<section class="sec sec--grey">
+  <div class="wrap">
+    <h2 class="center">No more mid-morning snack cravings</h2>
+    <div class="rail" data-rail>
+      <div class="rail__track">
+        <div class="rail__slide vid">
+          <p class="vid__cap">Transform your mornings.</p>
+          <div class="ph ph--dark"><div class="ph__in"><svg class="ic"><use href="#i-play"/></svg>Video 9:16</div></div>
+        </div>
+        <div class="rail__slide vid">
+          <p class="vid__cap">Cut the cravings.</p>
+          <div class="ph ph--dark"><div class="ph__in"><svg class="ic"><use href="#i-play"/></svg>Video 9:16</div></div>
+        </div>
+        <div class="rail__slide vid">
+          <p class="vid__cap">Flavours that make you happy.</p>
+          <div class="ph ph--dark"><div class="ph__in"><svg class="ic"><use href="#i-play"/></svg>Video 9:16</div></div>
+        </div>
+      </div>
+      <div class="rail__nav">
+        <button type="button" class="rail__arrow" data-prev aria-label="Previous video"><svg class="ic"><use href="#i-chev-l"/></svg></button>
+        <div class="rail__dots"></div>
+        <button type="button" class="rail__arrow" data-next aria-label="Next video"><svg class="ic"><use href="#i-chev-r"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FINAL CTA ======================= -->
+<section class="final">
+  <div class="wrap final__grid">
+    <div class="final__copy">
+      <h2>Double the fill<br>half the guilt</h2>
+      <p class="final__sub">Guaranteed to make a mouthwatering breakfast experience</p>
+      <div class="cta cta--center"><a class="btn" href="#buy">Become guilt free today</a></div>
+      <svg class="final__bowl final__bowl--desk" viewBox="0 0 160 130" aria-hidden="true"><use href="#bowl"/></svg>
+    </div>
+    <div class="final__media">
+      <div class="ph"><div class="ph__in"><svg class="ic"><use href="#i-img"/></svg>Image<br>Jar, bowl &amp; fruit</div></div>
+    </div>
+    <svg class="final__bowl final__bowl--mob" viewBox="0 0 160 130" aria-hidden="true"><use href="#bowl"/></svg>
+  </div>
+</section>
+
+</main>
+
+<footer class="ftr">
+  <div class="wrap">
+    <span class="ph-logo ph-logo--lg">LOGO</span>
+    <p>© 2026 Hangry Joe's. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---- rails: grid on desktop, scroll-snap carousel on mobile ---- */
+  document.querySelectorAll('[data-rail]').forEach(function(rail){
+    var track  = rail.querySelector('.rail__track');
+    var slides = track.children;
+    var dots   = rail.querySelector('.rail__dots');
+    var prev   = rail.querySelector('[data-prev]');
+    var next   = rail.querySelector('[data-next]');
+    var n = slides.length;
+
+    for (var i = 0; i < n; i++){
+      var d = document.createElement('button');
+      d.type = 'button';
+      d.className = 'rail__dot';
+      d.dataset.go = i;
+      d.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      dots.appendChild(d);
+    }
+
+    function index(){ return Math.round(track.scrollLeft / Math.max(1, track.clientWidth)); }
+    function go(i){ track.scrollTo({left: i * track.clientWidth, behavior: 'smooth'}); }
+    function update(){
+      var i = Math.min(n - 1, Math.max(0, index()));
+      for (var j = 0; j < n; j++) dots.children[j].classList.toggle('is-on', j === i);
+      prev.disabled = (i === 0);
+      next.disabled = (i === n - 1);
+    }
+
+    prev.addEventListener('click', function(){ go(index() - 1); });
+    next.addEventListener('click', function(){ go(index() + 1); });
+    dots.addEventListener('click', function(e){
+      var t = e.target.closest('[data-go]');
+      if (t) go(parseInt(t.dataset.go, 10));
+    });
+    var raf;
+    track.addEventListener('scroll', function(){ cancelAnimationFrame(raf); raf = requestAnimationFrame(update); });
+    window.addEventListener('resize', update);
+    update();
+  });
+
+  /* ---- gallery thumbnails ---- */
+  var galLabel = document.querySelector('[data-gal-label]');
+  var rail = document.querySelector('.gal__rail');
+  rail.addEventListener('click', function(e){
+    var b = e.target.closest('button');
+    if (!b) return;
+    rail.querySelectorAll('button').forEach(function(x){ x.classList.remove('is-on'); });
+    b.classList.add('is-on');
+    galLabel.innerHTML = b.dataset.label;
+  });
+
+  /* ---- flavour ---- */
+  var flav = document.querySelector('[data-flavours]');
+  flav.addEventListener('click', function(e){
+    var b = e.target.closest('.opt');
+    if (!b) return;
+    flav.querySelectorAll('.opt').forEach(function(x){ x.classList.remove('is-on'); x.setAttribute('aria-pressed', 'false'); });
+    b.classList.add('is-on');
+    b.setAttribute('aria-pressed', 'true');
+    galLabel.innerHTML = 'Image 6:5<br>' + b.dataset.flavour + ' jar';
+  });
+
+  /* ---- purchase option drives the select + button price (fix 5) ---- */
+  var buy = document.querySelector('[data-buy]');
+  document.querySelectorAll('input[name="plan"]').forEach(function(r){
+    r.addEventListener('change', function(){
+      document.querySelectorAll('.plan').forEach(function(p){
+        var on = p.contains(r);
+        p.classList.toggle('is-on', on);
+        var s = p.querySelector('select');
+        if (s) s.disabled = !on;
+      });
+      buy.textContent = 'Buy now | $' + r.value;
+    });
+  });
+})();
+</script>
+</body>
+</html>
